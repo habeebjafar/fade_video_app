@@ -1,3 +1,4 @@
+import 'package:fade_video_app/screens/download_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -87,7 +88,11 @@ class _BottomNavState extends State<BottomNav> {
 
                 MaterialButton(
                   minWidth: 30,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => DownloadScreen()
+                    ));
+                  },
 
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +102,7 @@ class _BottomNavState extends State<BottomNav> {
                         color: Colors.white,
                       ),
                       Text(
-                        'Download',
+                        'Downloads',
                         //style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Theme.of(context).primaryColor,),
                       ),
                     ],

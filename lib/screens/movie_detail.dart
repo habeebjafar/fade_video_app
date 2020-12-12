@@ -276,7 +276,8 @@ class _MovieDetailsState extends State<MovieDetails> {
                       // Implementing download
                       onTap: (){
                         // download should take place where the download URL is passed
-                        // **widget._list[widget.index].downloadUrl**
+                        // This is the way the download url can be accessed **widget._list[widget.index].downloadUrl**
+                        // The code can take place here or a method can and the download url will passed
                       },
                       child: Container(
                         width: 150,
