@@ -220,16 +220,13 @@ class _MovieDetailsState extends State<MovieDetails> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        downloadBloc.enqueue(
-                            context, widget._list[widget.index]);
-
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //       builder: (context) => VideoPlayer(
-                        //           widget._list[widget.index].url,
-                        //           widget._list[widget.index].title),
-                        //     ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoPlayer(
+                                  widget._list[widget.index].url,
+                                  widget._list[widget.index].title),
+                            ));
                       },
                       child: Container(
                         width: 150,
@@ -264,13 +261,6 @@ class _MovieDetailsState extends State<MovieDetails> {
                     GestureDetector(
                       // Implementing download
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VideoPlayer(
-                                  widget._list[widget.index].url,
-                                  widget._list[widget.index].title),
-                            ));
                         downloadBloc.enqueue(
                             context, widget._list[widget.index]);
                         // download should take place where the download URL is passed
@@ -404,11 +394,11 @@ class _MovieDetailsState extends State<MovieDetails> {
                 itemBuilder: (BuildContext context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              // builder: (context)=>MovieDetails(newList,index)
-                              ));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      // builder: (context)=>MovieDetails(newList,index)
+                      //         ));
                     },
                     child: Container(
                       margin: EdgeInsets.all(5),
