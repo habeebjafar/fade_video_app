@@ -26,6 +26,7 @@ class _ChewieListItemState extends State<ChewieListItem> {
     // Wrapper on top of the videoPlayerController
     _chewieController = ChewieController(
       videoPlayerController: widget.videoPlayerController,
+
       aspectRatio: 16 / 9,
       // Prepare the video to be played and display the first frame
       autoInitialize: true,
@@ -64,5 +65,4 @@ class _ChewieListItemState extends State<ChewieListItem> {
     widget.videoPlayerController.dispose();
     _chewieController.dispose();
   }
-
 }

@@ -1,4 +1,4 @@
-class Movie{
+class Movie {
   int id;
   String title;
   String url;
@@ -16,5 +16,6 @@ class Movie{
   String countries;
   String genres;
   String runTime;
-
+  bool isDownloaded;
+  Movie({this.isDownloaded = false});
 }
