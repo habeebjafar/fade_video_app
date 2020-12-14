@@ -10,7 +10,6 @@ class DramaMovies extends StatefulWidget {
 }
 
 class _DramaMoviesState extends State<DramaMovies> {
-
   MovieService _movieService = MovieService();
   List<Movie> _list = List<Movie>();
 
@@ -18,18 +17,12 @@ class _DramaMoviesState extends State<DramaMovies> {
   void initState() {
     super.initState();
     _getAllDramas();
-
-
-
   }
 
-
-
-
-  _getAllDramas() async{
+  _getAllDramas() async {
     var response = await _movieService.getDramaMovies();
     print(response);
-    response['data'].forEach((data){
+    response['data'].forEach((data) {
       var model = Movie();
       model.id = data['id'];
       model.title = data['title'];
@@ -48,8 +41,8 @@ class _DramaMoviesState extends State<DramaMovies> {
         _list.add(model);
       });
 
+      /// pass the list of movies returned from the api through the downloadPipeline in [download_bloc.dart] line 25
     });
-
   }
 
   @override
@@ -58,19 +51,18 @@ class _DramaMoviesState extends State<DramaMovies> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                  'Drama',
+                'Drama',
                 style: TextStyle(
                   fontSize: 14.0,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.0,
                 ),
               ),
-
               Text(
                 'View All',
                 style: TextStyle(
@@ -82,25 +74,27 @@ class _DramaMoviesState extends State<DramaMovies> {
             ],
           ),
         ),
-        SizedBox(height: 10,),
-
+        SizedBox(
+          height: 10,
+        ),
         Container(
           height: 210,
-         // color: Colors.blue,
+          // color: Colors.blue,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _list.length,
-              itemBuilder: (BuildContext context, index){
+              itemBuilder: (BuildContext context, index) {
                 return GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context)=>MovieDetails(_list,index)
-                    ));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MovieDetails(_list, index)));
                   },
                   child: Container(
                     margin: EdgeInsets.all(5),
                     width: 125,
-                   // color: Colors.red,
+                    // color: Colors.red,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,9 +109,11 @@ class _DramaMoviesState extends State<DramaMovies> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Text(
-                            _list[index].title,
+                          _list[index].title,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -125,12 +121,14 @@ class _DramaMoviesState extends State<DramaMovies> {
                           ),
                           //textAlign: TextAlign.left,
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                _list[index].quality,
+                              _list[index].quality,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.0,
@@ -138,7 +136,7 @@ class _DramaMoviesState extends State<DramaMovies> {
                               ),
                             ),
                             Text(
-                              _list[index].releaseDate.substring(0,4),
+                              _list[index].releaseDate.substring(0, 4),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.0,
@@ -149,14 +147,10 @@ class _DramaMoviesState extends State<DramaMovies> {
                         )
                       ],
                     ),
-
-
                   ),
                 );
-              }
-          ),
+              }),
         )
-
       ],
     );
   }

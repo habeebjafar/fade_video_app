@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:video_player/video_player.dart';
 
-
 class VideoPlayer extends StatefulWidget {
   final String videoIndex;
   final String videoTitle;
@@ -28,6 +27,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     /*   return Scaffold(
@@ -58,18 +58,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
       ),
       body: Center(
         child: ChewieListItem(
-          videoPlayerController: VideoPlayerController.network(
-              videoURL
-            //'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-          ),
-
+          videoPlayerController: VideoPlayerController.network(videoURL
+              //'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+              ),
         ),
       ),
     );
-
-
-
-
   }
 
   youtubeHierarchy() {
@@ -80,7 +74,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
           fit: BoxFit.fill,
           child: YoutubePlayer(
             controller: _controller,
-
           ),
         ),
       ),
@@ -93,6 +86,5 @@ class _VideoPlayerState extends State<VideoPlayer> {
     Navigator.pop(context);*/
     Navigator.pop(context);
     SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-
   }
 }

@@ -9,7 +9,6 @@ class SeriesMovies extends StatefulWidget {
 }
 
 class _SeriesMoviesState extends State<SeriesMovies> {
-
   MovieService _movieService = MovieService();
   List<Movie> _list = List<Movie>();
 
@@ -17,14 +16,12 @@ class _SeriesMoviesState extends State<SeriesMovies> {
   void initState() {
     super.initState();
     _getAllSeriesMovies();
-
   }
 
-
-  _getAllSeriesMovies() async{
+  _getAllSeriesMovies() async {
     var response = await _movieService.getAllSeries();
     print(response);
-    response['data'].forEach((data){
+    response['data'].forEach((data) {
       var model = Movie();
       model.id = data['id'];
       model.title = data['title'];
@@ -42,9 +39,7 @@ class _SeriesMoviesState extends State<SeriesMovies> {
       setState(() {
         _list.add(model);
       });
-
     });
-
   }
 
   @override
@@ -53,7 +48,7 @@ class _SeriesMoviesState extends State<SeriesMovies> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -65,7 +60,6 @@ class _SeriesMoviesState extends State<SeriesMovies> {
                   letterSpacing: 1.0,
                 ),
               ),
-
               Text(
                 'View All',
                 style: TextStyle(
@@ -77,20 +71,23 @@ class _SeriesMoviesState extends State<SeriesMovies> {
             ],
           ),
         ),
-        SizedBox(height: 10,),
-
+        SizedBox(
+          height: 10,
+        ),
         Container(
           height: 210,
           // color: Colors.blue,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _list.length,
-              itemBuilder: (BuildContext context, index){
+              itemBuilder: (BuildContext context, index) {
                 return GestureDetector(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context)=>SeriesMoviesDetails(_list,_list[index].title,_list[index].id,index)
-                    ));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SeriesMoviesDetails(_list,
+                                _list[index].title, _list[index].id, index)));
                   },
                   child: Container(
                     margin: EdgeInsets.all(5),
@@ -110,7 +107,9 @@ class _SeriesMoviesState extends State<SeriesMovies> {
                             fit: BoxFit.cover,
                           ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Text(
                           _list[index].title,
                           style: TextStyle(
@@ -120,7 +119,9 @@ class _SeriesMoviesState extends State<SeriesMovies> {
                           ),
                           //textAlign: TextAlign.left,
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -133,7 +134,7 @@ class _SeriesMoviesState extends State<SeriesMovies> {
                               ),
                             ),
                             Text(
-                              _list[index].releaseDate.substring(0,4),
+                              _list[index].releaseDate.substring(0, 4),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.0,
@@ -144,14 +145,10 @@ class _SeriesMoviesState extends State<SeriesMovies> {
                         )
                       ],
                     ),
-
-
                   ),
                 );
-              }
-          ),
+              }),
         )
-
       ],
     );
   }

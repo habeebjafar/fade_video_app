@@ -1,3 +1,5 @@
+import 'package:fade_video_app/helpers/functions.dart';
+import 'package:fade_video_app/screens/download_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -8,12 +10,11 @@ class BottomNav extends StatefulWidget {
 class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
-
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
-       notchMargin: 5,
+      notchMargin: 5,
       child: Container(
-       // padding: EdgeInsets.only(left: 25, right: 20),
+        // padding: EdgeInsets.only(left: 25, right: 20),
         height: 60,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -23,19 +24,17 @@ class _BottomNavState extends State<BottomNav> {
               children: [
                 MaterialButton(
                   minWidth: 30,
-                  onPressed: (){},
+                  onPressed: () {},
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
                         Icons.movie,
                         color: Colors.white,
-
                       ),
                       Text(
                         'Movies',
                         //style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.red,),
-
                       ),
                     ],
                   ),
@@ -43,7 +42,6 @@ class _BottomNavState extends State<BottomNav> {
                 MaterialButton(
                   minWidth: 30,
                   onPressed: () {},
-
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -60,16 +58,12 @@ class _BottomNavState extends State<BottomNav> {
                 ),
               ],
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 MaterialButton(
                   minWidth: 30,
-                  onPressed: () {
-
-                  },
-
+                  onPressed: () {},
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -84,11 +78,11 @@ class _BottomNavState extends State<BottomNav> {
                     ],
                   ),
                 ),
-
                 MaterialButton(
                   minWidth: 30,
-                  onPressed: () {},
-
+                  onPressed: () {
+                    push(context, DownloadScreen());
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -105,8 +99,6 @@ class _BottomNavState extends State<BottomNav> {
                 ),
               ],
             ),
-
-
           ],
         ),
       ),
