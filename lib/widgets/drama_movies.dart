@@ -1,8 +1,10 @@
+import 'package:fade_video_app/bloc/download_bloc.dart';
 import 'package:fade_video_app/models/movie.dart';
 import 'package:fade_video_app/screens/movie_detail.dart';
 import 'package:fade_video_app/services/movie_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DramaMovies extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _DramaMoviesState extends State<DramaMovies> {
   }
 
   _getAllDramas() async {
+    var downloadBloc = Provider.of<DownloadBloc>(context, listen: false);
     var response = await _movieService.getDramaMovies();
     print(response);
     response['data'].forEach((data) {
@@ -36,12 +39,13 @@ class _DramaMoviesState extends State<DramaMovies> {
       model.directors = data['directors'];
       model.crew = data['crew'];
       model.downloadUrl = data['download_url'];
+      _list.add(model);
+    });
 
-      setState(() {
-        _list.add(model);
-      });
-
-      /// pass the list of movies returned from the api through the downloadPipeline in [download_bloc.dart] line 25
+    /// pass the list of movies returned from the api through the downloadPipeline in [download_bloc.dart] line 25
+    var pipedlist = await downloadBloc.downloadPipeline(_list);
+    setState(() {
+      _list = pipedlist;
     });
   }
 

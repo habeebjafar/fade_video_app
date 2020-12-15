@@ -1,9 +1,7 @@
 import 'package:fade_video_app/bloc/download_bloc.dart';
 import 'package:fade_video_app/helpers/functions.dart';
 import 'package:fade_video_app/models/download.dart';
-import 'package:fade_video_app/models/movie.dart';
 import 'package:fade_video_app/screens/video_player.dart';
-import 'package:fade_video_app/services/movie_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,34 +15,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
   void initState() {
     super.initState();
     var downloadBloc = Provider.of<DownloadBloc>(context, listen: false);
-    // this shouldnt have been done, but your app design is ... hmmmm
-    MovieService _movieService = MovieService();
-    var response = _movieService.getDramaMovies();
-    var _list = <Movie>[];
-    response['data'].forEach((data) {
-      var model = Movie();
-      model.id = data['id'];
-      model.title = data['title'];
-      model.url = data['movie_url'];
-      model.thumbnail = data['movie_thumbnail'];
-      model.quality = data['movie_quality_id'];
-      model.releaseDate = data['release_date'];
-      model.genres = data['genres'];
-      model.poster = data['movie_poster'];
-      model.description = data['description'];
-      model.directors = data['directors'];
-      model.crew = data['crew'];
-      model.downloadUrl = data['download_url'];
-      setState(() {
-        _list.add(model);
-      });
-      downloadBloc.getDownloadsOnDevice(_list);
-    });
+    downloadBloc.getDownloadsOnDevice();
   }
 
   @override
   Widget build(BuildContext context) {
     var downloadBloc = Provider.of<DownloadBloc>(context);
+    downloadBloc.downloads.sort((a, b) => b.timestamp.compareTo(a.timestamp));
     return Scaffold(
         appBar: AppBar(
           title: Text('Downloads'),
@@ -95,6 +72,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
                       },
                       trailing: IconButton(
                           icon: Icon(Icons.delete),
+                          color: Colors.white,
                           onPressed: () async {
                             await downloadBloc.delete(download,
                                 isYT: isYT(download.movie.downloadUrl));

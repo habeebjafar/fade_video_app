@@ -264,8 +264,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                         downloadBloc.enqueue(
                             context, widget._list[widget.index]);
                         // download should take place where the download URL is passed
-                        // This is the way the download url can be accessed **widget._list[widget.index].downloadUrl**
-                        // The code can take place here or a method can and the download url will passed
+                        // **widget._list[widget.index].downloadUrl**
                       },
                       child: Container(
                         width: 150,

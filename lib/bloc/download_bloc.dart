@@ -3,12 +3,15 @@ import 'package:dio/dio.dart';
 import 'package:fade_video_app/helpers/functions.dart';
 import 'package:fade_video_app/models/download.dart';
 import 'package:fade_video_app/models/movie.dart';
+import 'package:fade_video_app/screens/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class DownloadBloc with ChangeNotifier {
   var yt = YoutubeExplode();
+  var storage = new LocalStorage('storage.json');
 
   List<Download> _downloads = [];
   List<Download> get downloads => _downloads;
@@ -26,7 +29,7 @@ class DownloadBloc with ChangeNotifier {
 
   /// pass the list<Movie> from the api through the downloadPipeline
   /// so you'll be able to know which movie has been downloaded or not
-  /// check [drama_movies.dart] line 44 for more
+  /// check [drama_movies.dart] line 45 for more
   Future<List<Movie>> downloadPipeline(List<Movie> movies) async {
     var downloadDir = await getDownloadDir();
     downloadDir.listSync().forEach((fileSysEntity) {
@@ -45,22 +48,14 @@ class DownloadBloc with ChangeNotifier {
 
   // get all the downloads on the user device by checking the name against
   // names of the movies from the api
-  void getDownloadsOnDevice(List<Movie> movies) async {
-    if (downloads.isEmpty) {
+  void getDownloadsOnDevice() async {
+    if (downloads.isEmpty && await storage.ready) {
       List<Download> temp = [];
-      var downloadDir = await getDownloadDir();
-      downloadDir.listSync().forEach((fileSysEntity) {
-        String _fileName = getFileNameFromUrl(fileSysEntity.path);
-        for (var i = 0; i < movies.length; i++) {
-          String __fileName = getFileNameFromUrl(movies[i].downloadUrl);
-          String ytId = getYoutubeId(movies[i].downloadUrl); // yt files
-          if (_fileName == __fileName || _fileName == ytId) {
-            temp.add(new Download(
-                movie: movies[i], status: DownloadStatus.Downloaded));
-            break;
-          }
-        }
-      });
+      List<dynamic> dl = storage.getItem('downloads');
+      if (dl != null)
+        dl.forEach((d) {
+          temp.add(new Download.fromMap(d));
+        });
       downloads = temp;
       loading = false;
     }
@@ -68,9 +63,15 @@ class DownloadBloc with ChangeNotifier {
 
   // queue movie for download
   void enqueue(BuildContext context, Movie movie, {bool queued = false}) async {
+    // movie has already been downloaded, play the movie instead or do something else
+    // NOTE: the movies must have passed through the download pipeline so this wont fail
     if (movie.isDownloaded) {
-      // movie has already been downloaded, play the movie instead or do something else
-      // NOTE: the movies must have passed through the download pipeline so this wont fail
+      push(
+          context,
+          Player(
+            movie: movie,
+            isYT: isYT(movie.downloadUrl),
+          ));
     } else {
       var downloadDir = await getDownloadDir();
       String downloadUrl = movie.downloadUrl;
@@ -78,8 +79,11 @@ class DownloadBloc with ChangeNotifier {
       var filePath =
           "$savePath/${getFileNameFromUrl(downloadUrl)}.${getFileExtFromUrl(downloadUrl)}";
       // queue download
-      _downloads
-          .add(new Download(movie: movie, status: DownloadStatus.Downloading));
+      var dl = new Download(
+          movie: movie,
+          status: DownloadStatus.Downloading,
+          timestamp: new DateTime.now().toString());
+      _downloads.add(dl);
       downloads = _downloads;
       if (isYT(downloadUrl)) {
         // extract the youtube stream url
@@ -97,7 +101,7 @@ class DownloadBloc with ChangeNotifier {
             break;
           }
         }
-      }, deleteOnError: true).then((_) {
+      }, deleteOnError: true).then((_) async {
         for (var i = 0; i < _downloads.length; i++) {
           if (downloads[i].movie.id == movie.id) {
             _downloads[i].progress = 100;
@@ -106,6 +110,7 @@ class DownloadBloc with ChangeNotifier {
             break;
           }
         }
+        await saveReference(dl);
       }).catchError((err) {
         for (var i = 0; i < _downloads.length; i++) {
           if (downloads[i].movie.id == movie.id) {
@@ -128,6 +133,8 @@ class DownloadBloc with ChangeNotifier {
         isYT: isYT));
     // delete the file if it exists
     if (toDelete.existsSync()) await toDelete.delete();
+    // remove download reference
+    await removeReference(download);
   }
 
   Future<Directory> getDownloadDir() async {
@@ -136,6 +143,39 @@ class DownloadBloc with ChangeNotifier {
     // create the download directory if it does not exist
     if (!downloadDir.existsSync()) await downloadDir.create();
     return downloadDir;
+  }
+
+  Future<void> saveReference(Download download) async {
+    if (await storage.ready) {
+      List<dynamic> dl = storage.getItem('downloads');
+      if (dl != null) {
+        dl.add(download.toMap());
+        await storage.setItem('downloads', dl);
+      } else {
+        await storage.setItem('downloads', [download.toMap()]);
+      }
+    }
+  }
+
+  Future<void> removeReference(Download download) async {
+    if (await storage.ready) {
+      List<dynamic> dl = storage.getItem('downloads');
+      if (dl != null) {
+        List<Download> temp = [];
+        dl.forEach((d) {
+          temp.add(new Download.fromMap(d));
+        });
+        for (var i = 0; i < temp.length; i++) {
+          if (temp[i].movie.id == download.movie.id) {
+            temp.removeAt(i);
+            dl.removeAt(i);
+            downloads = temp;
+            break;
+          }
+        }
+        await storage.setItem('downloads', dl);
+      }
+    }
   }
 }
 
