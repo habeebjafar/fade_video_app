@@ -219,6 +219,46 @@ class _MovieDetailsState extends State<MovieDetails> {
                       height: 10,
                     ),
                     GestureDetector(
+                      // Implementing download
+                      onTap: () {
+                        downloadBloc.enqueue(
+                            context, widget._list[widget.index]);
+                      },
+                      child: Container(
+                        width: 150,
+                        height: 40,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(3)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            widget._list[widget.index].isDownloaded
+                                ? Container()
+                                : Icon(
+                                    Icons.file_download,
+                                    color: Colors.black,
+                                  ),
+                            Text(
+                              widget._list[widget.index].isDownloaded
+                                  ? 'PLAY'
+                                  : 'DOWNLOAD',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
@@ -248,44 +288,6 @@ class _MovieDetailsState extends State<MovieDetails> {
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
-                                  fontSize: 14),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      // Implementing download
-                      onTap: () {
-                        downloadBloc.enqueue(
-                            context, widget._list[widget.index]);
-                        // download should take place where the download URL is passed
-                        // **widget._list[widget.index].downloadUrl**
-                      },
-                      child: Container(
-                        width: 150,
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(3)),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.file_download,
-                              color: Colors.black,
-                            ),
-                            Text(
-                              "DOWNLOAD",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
                                   fontSize: 14),
                               textAlign: TextAlign.center,
                             ),
