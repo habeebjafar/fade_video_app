@@ -57,8 +57,8 @@ class DownloadBloc with ChangeNotifier {
           temp.add(new Download.fromMap(d));
         });
       downloads = temp;
-      loading = false;
     }
+    loading = false;
   }
 
   // queue movie for download
