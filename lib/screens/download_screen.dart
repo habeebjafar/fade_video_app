@@ -70,13 +70,21 @@ class _DownloadScreenState extends State<DownloadScreen> {
                               ));
                         }
                       },
-                      trailing: IconButton(
-                          icon: Icon(Icons.delete),
-                          color: Colors.white,
-                          onPressed: () async {
-                            await downloadBloc.delete(download,
-                                isYT: isYT(download.movie.downloadUrl));
-                          }),
+                      trailing: download.status == DownloadStatus.Failed
+                          ? IconButton(
+                              icon: Icon(Icons.repeat_outlined),
+                              color: Colors.white,
+                              onPressed: () async {
+                                downloadBloc.enqueue(context, download.movie,
+                                    queued: true);
+                              })
+                          : IconButton(
+                              icon: Icon(Icons.delete),
+                              color: Colors.white,
+                              onPressed: () async {
+                                await downloadBloc.delete(download,
+                                    isYT: isYT(download.movie.downloadUrl));
+                              }),
                     );
                   }).toList()));
   }

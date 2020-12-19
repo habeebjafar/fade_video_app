@@ -16,6 +16,8 @@ class Movie {
   String countries;
   String genres;
   String runTime;
+
+  /// check if the movie has been downloaded
   bool isDownloaded;
   Movie({this.isDownloaded = false});
   Movie.fromMap(Map<String, dynamic> map)

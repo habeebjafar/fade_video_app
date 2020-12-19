@@ -63,9 +63,8 @@ class DownloadBloc with ChangeNotifier {
 
   // queue movie for download
   void enqueue(BuildContext context, Movie movie, {bool queued = false}) async {
-    // movie has already been downloaded, play the movie instead or do something else
-    // NOTE: the movies must have passed through the download pipeline so this wont fail
-    if (movie.isDownloaded) {
+    if (await hasDownloaded(movie, isYT: isYT(movie.downloadUrl))) {
+      // movie has already been downloaded, play the movie instead or do something else
       push(
           context,
           Player(
@@ -78,13 +77,21 @@ class DownloadBloc with ChangeNotifier {
       var savePath = "${downloadDir.path}";
       var filePath =
           "$savePath/${getFileNameFromUrl(downloadUrl)}.${getFileExtFromUrl(downloadUrl)}";
-      // queue download
       var dl = new Download(
           movie: movie,
           status: DownloadStatus.Downloading,
           timestamp: new DateTime.now().toString());
-      _downloads.add(dl);
-      downloads = _downloads;
+      // queue download if not queued
+      if (!queued) {
+        _downloads.add(dl);
+        downloads = _downloads;
+      }
+      // if the download is queued, reset the download status
+      if (queued) {
+        _downloads.firstWhere((d) => d.movie.id == movie.id).status =
+            DownloadStatus.Downloading;
+        downloads = _downloads;
+      }
       if (isYT(downloadUrl)) {
         // extract the youtube stream url
         filePath = "$savePath/${getYoutubeId(downloadUrl)}.mp4";
@@ -122,6 +129,15 @@ class DownloadBloc with ChangeNotifier {
         }
       });
     }
+  }
+
+  // check if file exists
+  Future<bool> hasDownloaded(Movie movie, {bool isYT = false}) async {
+    File file = File(await getDownloadedPath(
+        isYT ? getYoutubeId(movie.downloadUrl) : movie.downloadUrl,
+        isYT: isYT));
+    if (file.existsSync()) return true;
+    return false;
   }
 
   // delete download
